@@ -25,9 +25,19 @@
     * モジュール名を右クリック -> Open Module Settings -> dependenciesにsrc/main/resourcesを追加
     * scopeをtestに変更
 
-## Run Cli
+## Run
 
-* mvnw spring-boot:run or mvn spring-boot:run
+```
+cd app
+mvnw spring-boot:run
+```
+
+or
+
+```
+cd app
+mvn spring-boot:run
+```
 
 ---
 
