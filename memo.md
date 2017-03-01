@@ -1,53 +1,33 @@
-
-# 環境構築
-
-## Eclipse編
-
-### pluginの設定
-* Eclipse メニューバーから Help > Install New Software... と進み、Work With’のテキストボックスに次のURLを入力してください。
-* Thymeleafのタグの保管をしてくれます
-    * http://www.thymeleaf.org/eclipse-plugin-update-site/
-* DomaのDaoからsqlファイルに飛べます
-    * http://dl.bintray.com/domaframework/eclipse/
-
-### プロジェクトの設定方法
-
-* git clone https://github.com/uzresk/springboot-samples.git
-* develop ブランチに変更
-* インポート - フォルダーまたはアーカイブからプロジェクトを選択しspringboot-doma2を取り込む
-* Javaのビルドパス - src/main/resourcesの除外が*.*になっているので、これを除去する
-* プロジェクトのプロパティ - Javaコンパイラ - 注釈処理
-    * プロジェクト固有の設定を可能にする。
-* 注釈処理 - ファクトリーパス - 外部jarの追加からdoma.jarを追加する
-- Eclipseの設定
-    - html インライン要素から削除（input,span,div
-
-### アプリケーションの実行方法
-
-* DemoApplication.javaを右クリックして実行
-* http://localhost:8080/app/でログイン画面が表示される
-* http://localhost:8080/app/h2-console/でh2のConsole画面が表示される
-
----
+# Development Setting
 
 ## IntelliJ
 
-* 設定
-    * http://stackoverflow.com/questions/6166334/disable-not-used-warning-for-public-methods-of-a-class
-* git clone
-* Openする。pomを選択して、add as maven・・・
+* IntelliJ & Java8をインストールする
 * lombok pluginをインストールする
     * http://siosio.hatenablog.com/entry/2013/12/23/000054
 * devtoolsのreloadを有効にする
     * http://rabitarochan.hatenablog.com/entry/2016/01/12/010626
-* thymeleaf templateをreload対象にする
-    * maven経由で起動しているため、spring-boot-maven-plugin <addResource>true</addResource>が必要
+    
+### import sources
+
+* git clone https://github.com/uzresk/springboot-doma2-samples.git
+* Intellijを開く
+* File -> New -> Project From Existing Sourcesを選択し、cloneしたソースを開く
+* File -> New -> Module From Existing Sourcesを選択し、appディレクトリを選択
+* File -> New -> Module From Existing Sourcesを選択し、frameworkディレクトリを選択
+
+### Run Configuration
+
 * Run Configurationの設定
     * Command Line に spring-boot:runを設定
 * JUnit
     * testの時にsrc/main/resources配下をクラスパスに追加する
     * モジュール名を右クリック -> Open Module Settings -> dependenciesにsrc/main/resourcesを追加
     * scopeをtestに変更
+
+## Run Cli
+
+* mvnw spring-boot:run or mvn spring-boot:run
 
 ---
 
@@ -61,7 +41,7 @@
 * Autowiredは利用せずコンストラクタインジェクションを使う。
     * http://pppurple.hatenablog.com/entry/2016/12/29/233141
 * Entityは自動生成する
-    * doma2-genを利用したい。未検証
+    * 大量のEntityがある場合はdoma2-genを使う
 * Component
      * componentは余計なオブジェクトを生成しないため、Singleton(default)で取り扱う
      * このため、componentとなるオブジェクトにはメンバ変数を記載しないこと。
@@ -86,10 +66,9 @@
     * テーブル名はsnake、Entityはcamelで記載する。
     * マッピングに関してはEntityのアノテーションで解決する（@Entity(naming=NamingType.SNAKE_UPPER_CASE)）
     * EntityクラスBaseEntityクラスを継承する。BaseEntityクラスは共通のフィールドを保持し、BaseEntityListenerでInsert,Update時に共通のカラムがupdateされる
-* Entityの自動生成
-    * Doma2Genを利用する予定
 * 排他制御
     * 各テーブルにはバージョンIDカラムを持ち、@Versionを付与しておく。
+    * が、そもそも排他制御が必要なのか否か、Immutableなモデルにできないかを検討しておく。
 * 例外
     * どんな例外も基本的にはGlobalErrorControllerが動く。
     * GlobalErrorControllerは例外をリクエストスコープに入れて画面側のErrorControllerにforwardする。
@@ -102,16 +81,14 @@
     * プルダウンなどで使うコード値はCodeテーブルに格納しておく。
     * 起動時にCodeManagerが全件キャッシュしている。
     * キャッシュのリロード機能は未実装
-    * テンプレート側からキャッシュされたコード値を利用する場合には、CodeUtilityを利用することで実現している。(edit.html参照）
+    * テンプレート側からキャッシュされたコード値を利用する場合には、CodeUtilityを利用する。(edit.html参照）
 * テスト
     * JUnit4を利用。assertはassertjとassertj-dbを利用
-    * テストデータの作成はDbsetupを利用
+    * Excelでのデータ作成は見通し難いので、テストデータの作成はDbsetupを利用
     * test用のデータベースはin-memoryのh2を利用
         * 初期セットアップでsqlを投入
             * http://docs.spring.io/spring-boot/docs/current/reference/html/howto-database-initialization.html#howto-initialize-a-database-using-spring-jdbc
         * spring.datasource.sql-script-encodingを指定しないと日本語が文字化けする
 * DB migration
     * flywayを利用したい
-* はまったところ
-    * SubmitボタンのnameでControllerのメソッドを振り分けるのは振り分け先のメソッドが両方ともPostMappingである必要がある。
     
