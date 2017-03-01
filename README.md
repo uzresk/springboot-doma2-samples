@@ -12,13 +12,20 @@
 
 ### RunApp
 
-`mvnw spring-boot:run`
+```
+cd app
+mvnw spring-boot:run
+```
 
 open browser http://localhost/app/
 
-### Package
+### Package & RunApp
 
 * creating jar(app/target\app-0.0.1-SNAPSHOT.jar)
 
-`mvnw package`
+```
+mvnw package
+java -jar app/target/app-0.0.1-SNAPSHOT.jar
+```
+
 
